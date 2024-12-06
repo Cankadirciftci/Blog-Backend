@@ -7,7 +7,7 @@ import {
   getAllBlogs,
   getUserBlogById,
   getBlogById,
-  getBlogByCategory,
+  getBlogsByCategory,
   updateBlog,
   deleteBlog,
 } from "../controllers/blog.js";
@@ -18,7 +18,7 @@ router.post("/", verifyToken, checkUser, createBlog);
 router.get("/", getAllBlogs);
 router.get("/userblog/:id", verifyToken, checkUser, getUserBlogById); // Belirli bir kullanıcının bloglarını görmek için user ID
 router.get("/:id", verifyToken, checkUser, getBlogById); // Belirli bir blogu görmek için blog ID
-//router.get("/:category,", getBlogByCategory)
+router.get("/category/:category",getBlogsByCategory);
 router.delete("/:id", verifyToken, checkUser, deleteBlog);
 router.patch("/:id", verifyToken, checkUser, uploadImgMiddleware("blogImg"), updateBlog);
 

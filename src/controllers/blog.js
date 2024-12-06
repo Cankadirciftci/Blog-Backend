@@ -3,12 +3,15 @@ import User from "../Model/User.js";
 
 async function createBlog(req, res) {
   const user = req.user;
-  try{
+  try {
     const blog = new Blog(req.body);
     await blog.save();
+
     user.blogs.push(blog);
     await user.save();
-    res.status(200).json(blogs);
+    res.status(200).json({
+      message: "Blog başarıyla oluşturuldu! 🎉.",
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
@@ -53,19 +56,20 @@ async function getBlogById(req, res) {
   }
 }
 
-async function getBlogByCategory(req, res) {
-  const blogId = req.params.category;
-  console.log(blogId);
+async function getBlogsByCategory(req, res) {
+  const category = req.params.category;
+
   try {
-    const blog = await Blog.findById(blogId);
-    if(!blog){
-      return res.status(404).json({message: "Blog not found"});
+    const blogs = await Blog.find({ category: category });
+    if (blogs.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No blogs found in this category" });
     }
-    res.status(200).json(blog);
-  } catch(error) {
-    res.status(500).json({message : "Server error"});
+    res.status(200).json(blogs);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
   }
-  
 }
 
 async function updateBlog(req, res) {
@@ -107,7 +111,7 @@ export {
   getAllBlogs,
   getUserBlogById,
   getBlogById,
-  getBlogByCategory,
+  getBlogsByCategory,
   updateBlog,
   deleteBlog,
 };
